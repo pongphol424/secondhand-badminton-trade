@@ -1,0 +1,176 @@
+@layouts.master()
+@slot('navbar')
+@eval(await auth.check())
+@if(auth.isAuthenticated)
+<h3 class="ui header center aligned">
+</h3>
+@include('partials/navbarIsAuth')
+@else
+@include('partials/navbar')
+@end
+@end
+<br><br>
+<div class="ui container">
+  <br><br><br>
+
+  <form class="ui form" action={{ route('market.filter') }} method="post">
+    {{ csrfField()}}
+    <div class="ui form" style="width: 100%;">
+      <div class="ui action small fluid input">
+        <input type="text" placeholder="Search Model" name="searchModel">
+        <button class="ui teal button">Search</button>
+      </div>
+      <div class="ui segments"><label class="ui header"> Filter</label>
+        <div class="ui horizontal segments">
+          <div class="ui segment">
+            <select class="ui search dropdown" id="brand" name="brand">
+              <option value="{{null}}">--select brand--</option>
+              <option value="Yonex">Yonex</option>
+              <option value="Li-ning">Li-ning</option>
+              <option value="Victor">Victor</option>
+              <option value="Hundred">Hundred</option>
+              <option value="VS">VS</option>
+            </select>
+          </div>
+          <div class="ui segment">
+            <select class="ui search dropdown" id="weight" name="weight">
+              <option value="{{null}}">--select Weight--</option>
+              <option value="1U">1U</option>
+              <option value="2U">2U</option>
+              <option value="3U">3U</option>
+              <option value="4U">4U</option>
+              <option value="5U">5U</option>
+            </select>
+          </div>
+          <div class="ui segment">
+            <select class="ui search dropdown" id="flex" name="flex">
+              <option value="{{null}}">--select Flexibility--</option>
+              <option value="Stiff">Stiff</option>
+              <option value="Medium">Medium</option>
+              <option value="Flexible">Flexible</option>
+            </select>
+          </div>
+          <div class="ui segment">
+            <select class="ui search dropdown" id="grip" name="grip">
+              <option value="{{null}}">--select Grip--</option>
+              <option value="1G">1G</option>
+              <option value="2G">2G</option>
+              <option value="3G">3G</option>
+              <option value="4G">4G</option>
+              <option value="5G">5G</option>
+            </select>
+          </div>
+
+
+
+
+        </div>
+        <div class="ui horizontal segments">
+          <div class="ui segment" style="width: 1%;">
+            <select class="ui search dropdown" id="balance" name="balance">
+              <option value="{{null}}">--select Balance--</option>
+              <option value="HeadHeavy">Head Heavy</option>
+              <option value="EvenBalance">Even Balance</option>
+              <option value="HeadLight">Head Light</option>
+            </select>
+          </div>
+
+
+          <div class="ui segment">
+            <div class="ui form">
+              <div class="two fields">
+                <div class="field">
+                  <label>Min Price</label>
+                  <div class="ui left icon input">
+                    <input type="number" name="minPrice" placeholder="Min" min="0">
+                    <i class="dollar sign icon"></i>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Max Price</label>
+                  <div class="ui left icon input">
+                    <input type="number" name="maxPrice" placeholder="Max" min="0">
+                    <i class="dollar sign icon"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="ui horizontal segments">
+      <div class="ui segment">
+        <div class="ui form">
+          <div class="inline fields">
+            <label>Price: </label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priceHiLow" value="low">
+                <label>low to high</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="priceHiLow" value="high">
+                <label>high to low</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="ui segment">
+        <div class="ui form">
+          <div class="inline fields">
+            <label>Date: </label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="dateNewOld" value="new">
+                <label>Newest</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="dateNewOld" value="old">
+                <label>Oldest</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+<br>
+@each(post in posts)
+<div class="ui segment" style="height: 240px">
+  <div class="content">
+    <img class="left floated ui image" height="150px" width="120px" src={{post.images[0].filePath}}>
+    <div>
+      <div class="ui header">{{post.title}}</div>
+      <div class="ui horizontal segments">
+        <div class="ui segment">Brand: {{ post.brand}}</div>
+        <div class="ui segment">Weight: {{ post.weight }}</div>
+        <div class="ui segment">Balance: {{ post.balance }}</div>
+        <div class="ui segment">Flex: {{ post.flex }}</div>
+        <div class="ui segment">Grip: {{ post.grip }}</div>
+      </div>
+      <div class="left floated">Description: {{ post.body }}</div>
+      <div class="left floated">Price: {{ post.price }}</div>
+      <div class="left floated">Seller: {{ post.user.name }}</div>
+      <div>Create at: <span class="ui right floated tiny grey text">{{ post.createdAt.toFormat('dd MMM yyyy') }}
+      </div>
+    </div>
+    <a href="{{route('market.show',[post.id])}}" class=" ui tiny red button">More detail</a>
+  </div>
+</div>
+@end
+@end

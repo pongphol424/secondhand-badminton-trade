@@ -1,0 +1,171 @@
+@layouts.master()
+@slot('navbar')
+@include('partials/navbarIsAuth')
+@end
+
+<br><br><br><br>
+<h1>Create Post</h1>
+<form action='/store' method="post" onsubmit="sendData(event)">
+  {{csrfField()}}
+  <br>
+  <div style="width: 65%;" class="ui form">
+
+  <div class="field">
+      <label>Title</label>
+      <input type="text" id="title" name="title" value="{{old('title') || ""}}" required>
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="body" name="body" rows="4" required>{{old('body') || ""}}</textarea>
+    </div>
+
+    <div class="field">
+      <label>Price</label>
+      <input type="number" id="price" name="price" min="0"  name="Price" value="{{old('price') || ""}}" required>
+    </div>
+
+
+    <div class="ui segments"><label class="ui header">Brand&Model</label>
+      <div class="ui horizontal segments">
+        <div class="ui segment">
+          <select class="ui mini search dropdown" id="brand" name="brand" required>
+            <option value="{{null}}">--select brand--</option>
+            <option value="Yonex">Yonex</option>
+            <option value="Li-ning">Li-ning</option>
+            <option value="Victor">Victor</option>
+            <option value="Hundred">Hundred</option>
+            <option value="VS">VS</option>
+          </select>
+        </div>
+        <div class="ui segment">
+          <input type="text" placeholder="Insert Model Name" id="model" name="model" size="20" required>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="ui segments"><label class="ui header"> Specs</label>
+      <div class="ui horizontal segments">
+        <div class="ui segment">
+          <select class="ui mini search dropdown" id="weight" name="weight">
+            <option value="{{null}}">--select Weight--</option>
+            <option value="1U">1U</option>
+            <option value="2U">2U</option>
+            <option value="3U">3U</option>
+            <option value="4U">4U</option>
+            <option value="5U">5U</option>
+          </select>
+        </div>
+        <div class="ui segment">
+          <select class="ui mini search dropdown" id="balance" name="balance">
+            <option value="{{null}}">--select Balance--</option>
+            <option value="HeadHeavy">Head Heavy</option>
+            <option value="EvenBalance">Even Balance</option>
+            <option value="HeadLight">Head Light</option>
+          </select>
+        </div>
+
+
+      </div>
+      <div class="ui horizontal segments">
+        <div class="ui segment">
+          <select class="ui mini search dropdown" id="flex" name="flex">
+            <option value="{{null}}">--select Flexibility--</option>
+            <option value="Stiff">Stiff</option>
+            <option value="Medium">Medium</option>
+            <option value="Flexible">Flexible</option>
+          </select>
+        </div>
+        <div class="ui segment">
+          <select class="ui mini search dropdown" id="grip" name="grip">
+            <option value="{{null}}">--select Grip--</option>
+            <option value="1G">1G</option>
+            <option value="2G">2G</option>
+            <option value="3G">3G</option>
+            <option value="4G">4G</option>
+            <option value="5G">5G</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui form" style="width: 40%;">
+      <input type="file" id="fileUpload" name="file" multiple />
+      <p class="ui image-error-msg" style="color: red; text-align: center; padding-top: 1rem; display: none;">Image is required and limit 5 image</p>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end">
+      {{-- <input onclick="sendData()" class="ui red small button" type="submit" value="submit"> --}}
+      <input class="ui red small button" type="submit" value="submit">
+    </div>
+  </div>
+  </form>
+
+
+
+  <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+  <script>
+    const images = FilePond.create(document.getElementById('fileUpload'), {
+      allowMultiple: true,
+      maxFiles: 5,
+      acceptedFileTypes: ['image/*', 'application/pdf'],
+      allowRevert: false,
+      labelIdle: '<span class="filepond--label-action">Upload image</span>',
+      maxFileSize: '100MB',
+    })
+
+    function sendData(e) {
+      {{-- console.log(e) --}}
+      e.preventDefault()
+
+      var formData = new FormData(); // Create a FormData object
+      // Append form fields to FormData
+      formData.append("title", $("#title").val());
+      formData.append("body", $("#body").val());
+      formData.append("price", $("#price").val());
+      formData.append("brand", $("#brand").val());
+      formData.append("model", $("#model").val());
+      formData.append("weight", $("#weight").val());
+      formData.append("balance", $("#balance").val());
+      formData.append("flex", $("#flex").val());
+      formData.append("grip", $("#grip").val());
+
+      const images = FilePond.find(document.getElementById('fileUpload')).getFiles();
+
+      if (images.length === 0 || images.length > 5) {
+        $(".image-error-msg").show()
+        return
+      }
+
+
+      if (images.length > 0) {
+        for (var i = 0; i < images.length; i++) {
+          {{-- console.log(images[i].file); --}}
+          formData.append("fileInput[" + i + "]", images[i].file);
+        }
+      }
+
+      $.ajax({
+        url: "{{route('seller.store')}}",
+        method: "Post",
+        data: formData,
+        contentType: false, // Do not set content type for FormData
+        processData: false,
+        headers: {
+          "X-CSRF-TOKEN": $('input[name*="_csrf"]').val()
+        },
+        success: function (data) {
+          // Handle the response from the server
+          console.log(data)
+          window.location.href = "{{route('seller.posts')}}";
+        },
+        error: function (xhr, status, error) {
+          console.log(error)
+          {{-- window.location.href = "{{route('seller.create')}}"; --}}
+        }
+      });
+    }
+  </script>
+
+  @end

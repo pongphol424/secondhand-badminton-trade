@@ -1,0 +1,32 @@
+@layouts.master()
+  @slot('navbar')
+    @include('partials/navbarlogin')
+  @end
+<body>
+  <br><br><br><br>
+  <img src="images\logo.png" class="ui centered medium image">
+    <div class="ui middle aligned center aligned grid">
+      <div class="four wide column">
+            <h2 class="ui teal header">
+
+      <div class="content">
+        Register your account
+      </div>
+    </h2>
+        <form action="{{route('user.register')}}" method="post" class="ui form">
+      {{ csrfField()}}
+          <div class="field">
+            <input type="text" name="name" placeholder="Display Name">
+          </div>
+          <div class="field">
+            <input type="text" name="username" placeholder="User Name">
+          </div>
+          <div class="field">
+            <input type="password" name="password" placeholder="Password">
+          </div>
+          <button class="ui fluid teal submit button" type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+</body>
+@end

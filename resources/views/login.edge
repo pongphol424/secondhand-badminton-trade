@@ -1,0 +1,43 @@
+@layouts.master()
+  @slot('navbar')
+    @include('partials/navbarlogin')
+  @end
+<body>
+  <br><br><br><br>
+<img src="images\logo.png" class="ui centered medium image">
+<div class="ui middle aligned center aligned grid">
+  <div class="four wide column">
+    <h2 class="ui teal header">
+
+      <div class="content">
+        Log-in to your account
+      </div>
+    </h2>
+    <form action="{{route('user.login')}}" method="post" class="ui medium form">
+      {{ csrfField()}}
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="username" placeholder="user" fdprocessedid="8ync">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="Password" fdprocessedid="sj9qrr">
+          </div>
+        </div>
+        <input type="submit" class="ui fluid teal submit button" value="Login">
+      </div>
+      <div class="ui error message"></div>
+
+    </form>
+
+    <div class="ui fluid">
+     No account? <a href={{route('user.regis')}}>Sign Up</a>
+    </div>
+  </div>
+</div>
+</body>
+@end

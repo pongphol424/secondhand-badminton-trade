@@ -1,0 +1,52 @@
+@layouts.master()
+@slot('navbar')
+@eval(await auth.check())
+@if(auth.isAuthenticated)
+<h3 class="ui header center aligned">
+</h3>
+@include('partials/navbarIsAuth')
+@else
+@include('partials/navbar')
+@end
+@end
+
+<br><br><br>
+<h1>{{post.title}}</h1>
+{{-- <form action='/store' method="post"> --}}
+    @if(images)
+    <div class="ui segments" style="width: 100%;">
+        <div class="ui segment">
+            <div class="ui small image" style="display: flex; gap: 10px;">
+                @each(image in images)
+                <img class="ui image" src={{asset(image.filePath)}}>
+                @end
+            </div>
+        </div>
+    </div>
+    @end
+    <div class="ui segments" style="width: 100%;">
+        <div class="ui segment">
+            <label>Description</label>
+            <p>{{post.body}}</p>
+        </div>
+        <div class="ui segment">
+            <label>Price: <span class="ui right floated tiny grey text">{{post.price}}</span></label>
+            <br>
+            <label>Brand: <span class="ui right floated tiny grey text">{{post.brand}}</span></label>
+            <br>
+            <label>Model: <span class="ui right floated tiny grey text">{{post.model}}</span></label>
+            <br>
+            <label>Weight: <span class="ui right floated tiny grey text">{{post.weight||null}}</span></label>
+            <br>
+            <label>balance: <span class="ui right floated tiny grey text">{{post.balance}}</span></label>
+            <br>
+            <label>Flex: <span class="ui right floated tiny grey text">{{post.flex}}</span></label>
+            <br>
+            <label>Grip: <span class="ui right floated tiny grey text">{{post.grip}}</span></label>
+            <br>
+            <label>Last update: <span class="ui right floated tiny grey text">{{ post.updatedAt.toFormat('dd MMM yyyy') }}</span></label>
+        </div>
+
+    </div>
+
+    @end
