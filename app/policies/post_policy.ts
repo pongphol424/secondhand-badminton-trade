@@ -4,7 +4,7 @@ import { BasePolicy } from '@adonisjs/bouncer'
 import { AuthorizerResponse } from '@adonisjs/bouncer/types'
 
 export default class PostPolicy extends BasePolicy {
-    index(user:User):AuthorizerResponse{
+    index():AuthorizerResponse{
         return true
   }
 
